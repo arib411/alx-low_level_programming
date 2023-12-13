@@ -1,9 +1,9 @@
-#ifndef SEARCH_ALGOS_H
-#define SEARCH_ALGOS_H
+#ifndef SEARCH_H
+#define SEARCH_H
 
-#include <math.h>
-#include <stdio.h>
 #include <stdlib.h>
+#include <stdio.h>
+#include <math.h>
 
 /**
  * struct listint_s - singly linked list
@@ -17,74 +17,55 @@
  */
 typedef struct listint_s
 {
-		int n;
-		size_t index;
-		struct listint_s *next;
-} listint_t;
-
-/**
- * struct skiplist_s - Singly linked list with an express lane
- *
- * @n: Integer
- * @index: Index of the node in the list
- * @next: Pointer to the next node
- * @express: Pointer to the next node in the express lane
- *
- */
-typedef struct skiplist_s
-{
-
 	int n;
 	size_t index;
-	struct skiplist_s *next;
-	struct skiplist_s *express;
-} skiplist_t;
+	struct listint_s *next;
+} listint_t;
 
+
+/*
+ * Function that searches for a value in an
+ * array of integers using the Linear search algorithm
+ */
 int linear_search(int *array, size_t size, int value);
+
+/*
+ * Function that searches for a value in a sorted array
+ * of integers using the Binary search algorithm
+ */
 int binary_search(int *array, size_t size, int value);
+
+/*
+ * Function that searches for a value in a
+ * sorted array of integers using the Jump search algorithm
+ */
 int jump_search(int *array, size_t size, int value);
+
+/*
+ * Function that searches for a value in a sorted array of
+ * integers using the Interpolation search algorithm
+ */
 int interpolation_search(int *array, size_t size, int value);
+
+/*
+ * Function that searches for a value in a sorted array
+ * of integers using the Exponential search algorithm
+ */
 int exponential_search(int *array, size_t size, int value);
-int advanced_binary(int *array, size_t size, int value);
+
+/*
+ * Function that searches for a value in a sorted list
+ * of integers using the Jump search algorithm in a singly linked list
+ */
 listint_t *jump_list(listint_t *list, size_t size, int value);
-skiplist_t *linear_skip(skiplist_t *list, int value);
 
-#endif /* SEARCH_ALGOS_H */
+ /* print_list - Prints the content of a listint_t */
+void print_list(const listint_t *list);
 
+/* create_list - Creates a single linked list */
+listint_t *create_list(int *array, size_t size);
 
-0x1E-search_algorithms/listint/create_list.c
-
-#include <stdlib.h>
-#include "../search_algos.h"
-
+/* free_list - Deallocates a singly linked list */
 void free_list(listint_t *list);
 
-/**
- * create_list - Creates a single linked list
- *
- * @array: Pointer to the array to use to fill the list
- * @size: Size of the array
- *
- * Return: A pointer to the head of the created list (NULL on failure)
- */
-listint_t *create_list(int *array, size_t size)
-{
-	listint_t *list;
-	listint_t *node;
-
-	list = NULL;
-	while (array && size--)
-	{
-		node = malloc(sizeof(*node));
-		if (!node)
-		{
-			free_list(list);
-			return (NULL);
-		}
-		node->n = array[size];
-		node->index = size;
-		node->next = list;
-		list = node;
-	}
-	return (list);
-}
+#endif /* SEARCH_H */
