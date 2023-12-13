@@ -1,55 +1,52 @@
 #include "search_algos.h"
 
 /**
- * linear_skip - Searches for a value in a sorted singly linked list
- *               of integers using linear skip.
- * @list: A pointer to the head of the linked list to search.
- * @value: The value to search for.
+ * linear_skip - searches for a value in a sorted skip list of integers
+ * @list: pointer to the head of the skip list to search in
+ * @value: value to search for
  *
- * Return: If the value is not present or the head of the list is NULL, NULL.
- *         Otherwise, a pointer to the first node where the value is located.
+ * Return: Pointer on the first node where value is located or NULL
  */
-
 skiplist_t *linear_skip(skiplist_t *list, int value)
 {
-	skiplist_t *node, *jump;
+	size_t i;
+	skiplist_t *node_pos, *node_min;
 
-	/* Check if the list is NULL */
-	if (list == NULL)
+	if (!list)
 		return (NULL);
 
-	/* Perform linear skip */
-	for (node = jump = list; jump->next != NULL && jump->n < value;)
+	node_pos = list, node_min = list;
+
+	while (node_pos && node_pos->next && (node_pos->n) < value)
 	{
-		/* Store the previous jump node */
-		node = jump;
+		node_min = node_pos;
 
-		/* If the express lane is available */
-		if (jump->express != NULL)
+		if (node_pos->express)
 		{
-			/* Jump to the next express node */
-			jump = jump->express;
+			node_pos = node_pos->express;
 
-			printf("Value checked at index [%ld] = [%d]\n", jump->index, jump->n);
+			printf("Value checked at index [%lu] = [%d]\n",
+			       node_pos->index, node_pos->n);
 		}
 		else
-		{
-			/* Traverse to the end of the list */
-			while (jump->next != NULL)
-				/* Move to the next node in the list */
-				jump = jump->next;
-		}
+			while (node_pos->next)
+				node_pos = node_pos->next;
 	}
 
-	printf("Value found between indexes [%ld] and [%ld]\n",
-			node->index, jump->index);
+	printf("Value found between indexes [%lu] and [%lu]\n",
+	       node_min->index, node_pos->index);
 
-	/*  performs a linear search, checking each */
-	/*  node's value to find the target value */
-	for (; node->index < jump->index && node->n < value; node = node->next)
-		printf("Value checked at index [%ld] = [%d]\n", node->index, node->n);
+	for (i = node_min->index;
+	     i <= (node_pos->index) && (node_min->n <= value);
+	     i++, node_min = node_min->next)
+	{
+		printf("Value checked at index [%lu] = [%d]\n", i, node_min->n);
+		if (node_min && (node_min->n) == value)
+			return (node_min);
+	}
 
-	printf("Value checked at index [%ld] = [%d]\n", node->index, node->n);
+	if (node_min)
+		printf("Value checked at index [%lu] = [%d]\n", i, node_min->n);
 
-	return (node->n == value ? node : NULL);
+	return (NULL);
 }
